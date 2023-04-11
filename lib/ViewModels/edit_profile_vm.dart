@@ -45,11 +45,6 @@ class EditProfileViewModel{
           "topicID" : topic.topic!.id
         });
       });
-      print("--------------------------------------");
-      print("--------------------------------------");
-      print(user.id);
-      print("--------------------------------------");
-      print("--------------------------------------");
       final response = await _supabase.from("UserTopic").delete().match({
         "userID" : user.id
       });

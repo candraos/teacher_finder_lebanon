@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/search_view.dart';
+import 'package:teacher_finder_lebanon/Models/Connection.dart';
+import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
+import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
+import 'package:provider/provider.dart';
 
+import '../Models/Student.dart';
 import '../Models/Teacher.dart';
 import '../Models/User.dart';
 
@@ -16,6 +21,7 @@ class SearchList extends StatefulWidget {
 }
 
 class _SearchListState extends State<SearchList> {
+  final ConnectionViewModel _connectionViewModel = ConnectionViewModel();
   @override
   Widget build(BuildContext context) {
     return GridView.count(
@@ -47,7 +53,21 @@ class _SearchListState extends State<SearchList> {
                         style: ElevatedButton.styleFrom(
                             minimumSize: Size.fromHeight(30)
                         ),
-                        onPressed: (){},
+                        onPressed: () async{
+                          late Connection connection;
+                          User user = context.read<LoginProvider>().user;
+                          if(user is Student){
+                            connection = Connection.Send(user.id, widget.users[i].id);
+                          }else{
+                            connection = Connection.Send(widget.users[i].id, user.id);
+                          }
+                          bool success = await _connectionViewModel.send(connection);
+                          if(success){
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection sent to ${widget.users[i].firstName} ${widget.users[i].lastName}")));
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection could not be sent")));
+                          }
+                        },
                         child: Text("connect")
                     ),
                   )
