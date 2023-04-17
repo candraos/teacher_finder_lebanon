@@ -48,8 +48,8 @@ class Teacher extends User{
     longitude = json["longitude"];
     image = json["image"];
     currency = json["currency"];
-    price = json["price"];
-    rating = json["rating"];
+    price = double.parse(json["price"].toString());
+    rating = double.parse(json["rating"].toString());
   }
   Teacher();
 }

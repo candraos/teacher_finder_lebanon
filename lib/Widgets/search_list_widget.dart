@@ -61,7 +61,7 @@ class _SearchListState extends State<SearchList> {
                           }else{
                             connection = Connection.Send(widget.users[i].id, user.id);
                           }
-                          bool success = await _connectionViewModel.send(connection);
+                          bool success = await _connectionViewModel.send(connection,context);
                           if(success){
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection sent to ${widget.users[i].firstName} ${widget.users[i].lastName}")));
                           }else{

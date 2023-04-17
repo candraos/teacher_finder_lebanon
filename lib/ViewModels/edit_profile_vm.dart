@@ -23,6 +23,15 @@ class EditProfileViewModel{
       }).match({
         "customid": user.id
       });
+      var attributes = UserAttributes(data: {
+        "firstName" : firstName,
+        "lastName" : lastName,
+        "section" : section,
+        if(amount != 0)
+          "price" : amount
+      });
+
+      await _supabase.auth.updateUser(attributes);
       user.firstName = firstName;
       user.lastName = lastName;
       user.section = section;

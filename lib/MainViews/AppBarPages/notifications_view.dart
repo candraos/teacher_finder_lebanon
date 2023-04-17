@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
 
 import '../../Widgets/request_widget.dart';
 
@@ -12,6 +13,7 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
+    ConnectionViewModel().fetch(context);
     return Scaffold(
       body: ListView.separated(
         shrinkWrap: true,
