@@ -13,7 +13,7 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
-    ConnectionViewModel().fetch(context);
+
     return Scaffold(
       body: ListView.separated(
         shrinkWrap: true,

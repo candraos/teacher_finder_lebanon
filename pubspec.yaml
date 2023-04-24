@@ -29,6 +29,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  badges:
+  path_provider:
+  sqflite:
   flutter_secure_storage:
   email_validator: '^2.1.16'
   geolocator:

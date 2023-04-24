@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../Models/Student.dart';
 import '../Models/Teacher.dart';
 import '../Providers/login_provider.dart';
+import '../ViewModels/connection_view_model.dart';
 import 'AppBarPages/calendar_view.dart';
 
 class Navigation extends StatefulWidget {
@@ -32,6 +33,7 @@ class _NavigationState extends State<Navigation> {
     }
     context.read<LoginProvider>().update(user);
     context.read<ListTopicsViewModel>().fetchUserTopics(user.id);
+    await ConnectionViewModel().fetch(context);
   }
   @override
   void initState() {

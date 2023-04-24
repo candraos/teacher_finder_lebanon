@@ -5,9 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:teacher_finder_lebanon/Models/Student.dart';
 import 'package:teacher_finder_lebanon/Models/Teacher.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
-class ConnectionViewModel {
+import 'package:teacher_finder_lebanon/Models/Notification.dart' as NotificationModel;
+import 'notification_view_model.dart';
+class ConnectionViewModel with ChangeNotifier{
   final _supabase = Supabase.instance.client;
-
+  List<Connection> myConnections = [];
   Future<bool> send(Connection connection,BuildContext context) async{
     var user = context.read<LoginProvider>().user;
     String role = '';
@@ -37,8 +39,7 @@ class ConnectionViewModel {
     }
   }
 
-  Future<List<Connection>> fetch(BuildContext context) async{
-    List<Connection>? result = [];
+  Future<void> fetch(BuildContext context) async{
     var user = context.read<LoginProvider>().user;
     String column = '',table = '';
     user is Student ? column = "studentID" : column = "teacherID";
@@ -50,18 +51,22 @@ class ConnectionViewModel {
             column: user.id,
             "role" : user is Student? "teacher" : "student",
           });
-      result = (query as List<dynamic>).map((connectionJSon) => Connection.fromJson(connectionJSon)).cast<Connection>().toList();
-      print(result);
-      result.forEach((connection) {
+      myConnections = (query as List<dynamic>).map((connectionJSon) => Connection.fromJson(connectionJSon)).cast<Connection>().toList();
+      print(myConnections);
+      myConnections.forEach((connection) {
         final userQuery =  _supabase.from(user is Student ? "Teacher" : "Student").select().eq("customid", user is Student ? connection.TeacherID : connection.studentID).then((value) {
-          print(value[0]);
+
           user is Student ?  connection.user = Teacher.fromJson(value[0]) : connection.user = Student.fromJson(value[0]);
-          print(value[0]);
+          ListNotificationsViewModel().addNotification(NotificationViewModel(NotificationModel.Notification(
+            null,
+            "${connection.user?.firstName} ${connection.user?.lastName} wants to be your ${connection.user is Student ? "Student" : "Teacher"}",
+            "",
+            NotificationModel.Type.Connection,
+            connection.user!
+          )));
         });
       });
-      return result;
     }catch(e){
-      return [];
     }
   }
 }

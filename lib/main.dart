@@ -12,6 +12,7 @@ import 'package:teacher_finder_lebanon/MainViews/navigation_view.dart';
 import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
 import 'package:teacher_finder_lebanon/Providers/session_provider.dart';
 import 'package:teacher_finder_lebanon/Registration/login_view.dart';
+import 'package:teacher_finder_lebanon/ViewModels/notification_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/search_vm.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
 import 'Models/Student.dart';
@@ -49,6 +50,7 @@ await _initialise();
   runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (_) => ListNotificationsViewModel()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
           ChangeNotifierProvider(create: (_) => SearchViewModel()),
           ChangeNotifierProvider(create: (_) => ListTopicsViewModel()),
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
     return CalendarControllerProvider(
       controller: EventController(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Teacher Finder Lebanon',
         theme: ThemeData(
           primaryColor: Color.fromRGBO(18, 94, 137, 1),
