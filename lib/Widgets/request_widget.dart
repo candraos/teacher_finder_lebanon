@@ -1,40 +1,81 @@
-import 'package:flutter/material.dart';
+import 'dart:typed_data';
 
-class RequestWidget extends StatelessWidget {
-  const RequestWidget({Key? key}) : super(key: key);
+import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:image_picker_widget/image_picker_widget.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:teacher_finder_lebanon/Models/Notification.dart' as NotificationModel;
+
+class RequestWidget extends StatefulWidget {
+   RequestWidget({Key? key,required this.notification}) : super(key: key);
+
+  NotificationModel.Notification notification;
+
+  @override
+  State<RequestWidget> createState() => _RequestWidgetState();
+}
+
+class _RequestWidgetState extends State<RequestWidget> {
+
+  Uint8List? userImage;
+
+  _fetchImage() async{
+    var client = Supabase.instance.client;
+    if(widget.notification.user.image != null)
+      userImage = await client
+          .storage
+          .from('tf-bucket')
+          .download(widget.notification.user.image!);
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        ListTile(
-          leading: Image.asset("assets/profilepic.png",height: 50,width: 50,),
-          title: Text("John Doe wants to be your teacher",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-
-        ),
-        Row(
+    return FutureBuilder(
+      future: _fetchImage(),
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting) return Container();
+        return Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(width: 10,),
-            Expanded(
+            ListTile(
+              leading:  ImagePickerWidget(
+                diameter: 50,
+                initialImage:widget.notification.user.image == null? Image(image: Svg("assets/profile-logo.svg"),).image : Image.memory(userImage!).image,
+                shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
+                isEditable: false,
 
-              child: ElevatedButton(
-                  onPressed: (){},
-                  child: Text("Accept")),
+              ),
+              title: Text("${this.widget.notification.title}",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+
             ),
-            SizedBox(width: 10,),
-            Expanded(
+            Row(
+              children: [
+                SizedBox(width: 10,),
+                Expanded(
 
-              child: ElevatedButton(
+                  child: ElevatedButton(
+                      onPressed: (){},
+                      child: Text("Accept")),
+                ),
+                SizedBox(width: 10,),
+                Expanded(
 
-                onPressed: (){},
-                child: Text("Reject"),
-                style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).errorColor),),
-            ),
-            SizedBox(width: 10,),
+                  child: ElevatedButton(
+
+                    onPressed: (){},
+                    child: Text("Reject"),
+                    style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).errorColor),),
+                ),
+                SizedBox(width: 10,),
+              ],
+            )
           ],
-        )
-      ],
+        );
+      }
     );
   }
 }

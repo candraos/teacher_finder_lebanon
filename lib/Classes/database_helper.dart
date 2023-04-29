@@ -27,8 +27,13 @@ class DatabaseHelper{
         "title TEXT, "
         "description TEXT, "
         "type text, "
-        "user text "
-        ")");
+        "user text, "
+        "firstName text, "
+        "lastName text, "
+        "image text, "
+        "role text "
+        ")"
+    );
   }
 
   Future<List<Notification>> getNotifications() async{

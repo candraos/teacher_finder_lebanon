@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
-
+import 'package:provider/provider.dart';
+import '../../Classes/database_helper.dart';
+import '../../ViewModels/notification_view_model.dart';
 import '../../Widgets/request_widget.dart';
+import 'package:teacher_finder_lebanon/Models/Notification.dart' as NotificationModel;
 
 class Notifications extends StatefulWidget {
   const Notifications({Key? key}) : super(key: key);
@@ -11,6 +13,23 @@ class Notifications extends StatefulWidget {
 }
 
 class _NotificationsState extends State<Notifications> {
+
+  // ListNotificationsViewModel _listNotificationsViewModel = ListNotificationsViewModel();
+  List<NotificationModel.Notification> _notifications = [];
+
+  initialise() async{
+    var temp  = await DatabaseHelper.instance.getNotifications();
+    setState(() {
+      _notifications = temp;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initialise();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -19,8 +38,9 @@ class _NotificationsState extends State<Notifications> {
         shrinkWrap: true,
 
           itemBuilder: (_, index){
-            if(index == 0){
-              return RequestWidget();
+          NotificationModel.Notification notification = _notifications[index];
+            if(notification.type == NotificationModel.Type.Connection){
+              return RequestWidget(notification: notification,);
             }
             return ListTile(
               title: Text("Notification number $index",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
@@ -28,7 +48,7 @@ class _NotificationsState extends State<Notifications> {
             );
           },
           separatorBuilder: (_, index) => Divider(thickness: 2,),
-          itemCount: 40)
+          itemCount: _notifications.length)
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:teacher_finder_lebanon/Models/Notification.dart' as Notification
 import 'notification_view_model.dart';
 class ConnectionViewModel with ChangeNotifier{
   final _supabase = Supabase.instance.client;
+  ListNotificationsViewModel _listNotificationsViewModel = ListNotificationsViewModel();
   List<Connection> myConnections = [];
   Future<bool> send(Connection connection,BuildContext context) async{
     var user = context.read<LoginProvider>().user;
@@ -57,7 +58,7 @@ class ConnectionViewModel with ChangeNotifier{
         final userQuery =  _supabase.from(user is Student ? "Teacher" : "Student").select().eq("customid", user is Student ? connection.TeacherID : connection.studentID).then((value) {
 
           user is Student ?  connection.user = Teacher.fromJson(value[0]) : connection.user = Student.fromJson(value[0]);
-          ListNotificationsViewModel().addNotification(NotificationViewModel(NotificationModel.Notification(
+          _listNotificationsViewModel.addNotification(NotificationViewModel(NotificationModel.Notification(
             null,
             "${connection.user?.firstName} ${connection.user?.lastName} wants to be your ${connection.user is Student ? "Student" : "Teacher"}",
             "",

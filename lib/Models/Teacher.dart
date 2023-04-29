@@ -39,6 +39,7 @@ class Teacher extends User{
   }
 
   Teacher.fromJson(Map<String,dynamic> json){
+
     id = json["customid"];
     firstName = json["firstName"];
     lastName = json["lastName"];

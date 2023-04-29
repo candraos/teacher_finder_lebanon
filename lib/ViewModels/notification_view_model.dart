@@ -7,15 +7,21 @@ import 'package:provider/provider.dart';
 
 class ListNotificationsViewModel with ChangeNotifier{
   List<NotificationViewModel> notifications = [];
-  int newNotifications  = 0;
+  int _newNotifications  = 0;
+  int get newNotifications => _newNotifications;
   // NotificationModel.NotificationFactory _notificationFactory = NotificationModel.NotificationFactory();
 
   void addNotification(NotificationViewModel notificationViewModel){
-    DatabaseHelper helper = DatabaseHelper.instance;
-    helper.addNotification(notificationViewModel.notification);
-    notifications.add(notificationViewModel);
-    newNotifications = newNotifications + 1;
-    notifyListeners();
+    try{
+      DatabaseHelper helper = DatabaseHelper.instance;
+      helper.addNotification(notificationViewModel.notification);
+      notifications.add(notificationViewModel);
+      _newNotifications = _newNotifications + 1;
+      notifyListeners();
+    }catch(e){
+      print("Exception in notifications: $e");
+    }
+
   }
 
 

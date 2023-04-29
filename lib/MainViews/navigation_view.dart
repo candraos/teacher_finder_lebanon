@@ -20,37 +20,19 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
 
-  initialise() async{
-    final _storage =  FlutterSecureStorage();
-    String? currency = await _storage.read(key: "currency");
-    var user;
-    if(currency != null){
-      Teacher teacher = Teacher();
-      user = await teacher.fromStorage();
-    }else{
-      Student student = Student();
-      user = await student.fromStorage();
-    }
-    context.read<LoginProvider>().update(user);
-    context.read<ListTopicsViewModel>().fetchUserTopics(user.id);
-    await ConnectionViewModel().fetch(context);
-  }
+
+
   @override
   void initState() {
     super.initState();
-    initialise();
+
   }
-  // List<Widget> _pages = [
-  //   Home(),
-  //   Search(),
-  //   Conversations(),
-  //   Profile(),
-  //   Calendar()
-  // ];
+
   double iconSize = 35;
 
   @override
   Widget build(BuildContext context) {
+
 
 
     return Scaffold(

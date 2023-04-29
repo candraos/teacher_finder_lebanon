@@ -141,4 +141,11 @@ class UserViewModel{
     context.read<LoginProvider>().update(user);
   }
 
+  Future<void> fetchUser(int id,String table) async{
+    late User user;
+    final response = await supabase.from(table).select().eq("customid", id);
+    print(response);
+    // return user;
+  }
+
 }

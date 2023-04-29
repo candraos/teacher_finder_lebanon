@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:provider/provider.dart';
