@@ -27,13 +27,14 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget{
   @override
   Size get preferredSize => Size.fromHeight(60);
 }
-
+int newNotifications = 0;
 class _CustomAppBarState extends State<CustomAppBar> {
-  ConnectionViewModel _connectionViewModel = ConnectionViewModel();
+
 
 
   initialise() async{
     final _storage =  FlutterSecureStorage();
+    ConnectionViewModel _connectionViewModel = ConnectionViewModel();
     String? currency = await _storage.read(key: "currency");
     var user;
     if(currency != null){
@@ -45,16 +46,22 @@ class _CustomAppBarState extends State<CustomAppBar> {
     }
     context.read<LoginProvider>().update(user);
     await context.read<ListTopicsViewModel>().fetchUserTopics(user.id);
-    await _connectionViewModel.fetch(context);
-    print(context.read<ListNotificationsViewModel>().notifications.length);
+    await  _connectionViewModel.fetch(context).then((value) => setState(() {
+       newNotifications = context.read<ListNotificationsViewModel>().newNotifications;
+       print(newNotifications);
+     })
+     );
+
+
   }
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initialise();
-    });
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => initialise());
+
     // WidgetsFlutterBinding.ensureInitialized();
     // initialise();
   }
@@ -72,14 +79,13 @@ class _CustomAppBarState extends State<CustomAppBar> {
         ),
         // SizedBox(width: 10,),
 
-          Badge(
-
-            position: BadgePosition.topEnd(top: 0, end: 7),
-            badgeContent:Text("${context.watch<ListNotificationsViewModel>().newNotifications}",style: TextStyle(color: Colors.white),),
-            child: IconButton(
-                onPressed: () => context.read<PageProvider>().changePage(Notifications()),
-                icon: Icon(widget.notificationIcon)
-            ),
+          IconButton(
+              onPressed: () => context.read<PageProvider>().changePage(Notifications()),
+              icon: Badge(
+                  showBadge: newNotifications != 0,
+                  position: BadgePosition.topEnd(top: 0, end: 7),
+                  badgeContent:Text("${newNotifications}",style: TextStyle(color: Colors.white),),
+                  child: Icon(widget.notificationIcon,))
           ),
 
         SizedBox(width: 15,),

@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:teacher_finder_lebanon/Classes/database_helper.dart';
 import 'package:teacher_finder_lebanon/Models/Connection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -53,18 +54,22 @@ class ConnectionViewModel with ChangeNotifier{
             "role" : user is Student? "teacher" : "student",
           });
       myConnections = (query as List<dynamic>).map((connectionJSon) => Connection.fromJson(connectionJSon)).cast<Connection>().toList();
-      print(myConnections);
       myConnections.forEach((connection) {
         final userQuery =  _supabase.from(user is Student ? "Teacher" : "Student").select().eq("customid", user is Student ? connection.TeacherID : connection.studentID).then((value) {
 
           user is Student ?  connection.user = Teacher.fromJson(value[0]) : connection.user = Student.fromJson(value[0]);
-          _listNotificationsViewModel.addNotification(NotificationViewModel(NotificationModel.Notification(
-            null,
-            "${connection.user?.firstName} ${connection.user?.lastName} wants to be your ${connection.user is Student ? "Student" : "Teacher"}",
-            "",
-            NotificationModel.Type.Connection,
-            connection.user!
-          )));
+          DatabaseHelper.instance.deleteConnectionNotifications().then((value) {
+            _listNotificationsViewModel.addNotification(NotificationViewModel(NotificationModel.Notification(
+                null,
+                "${connection.user?.firstName} ${connection.user?.lastName} wants to be your ${connection.user is Student ? "Student" : "Teacher"}",
+                "",
+                NotificationModel.Type.Connection,
+                connection.user!
+            )));
+          }
+
+          );
+
         });
       });
     }catch(e){

@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
-import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
 import 'package:teacher_finder_lebanon/Widgets/CustomAppBar.dart';
 import 'package:provider/provider.dart';
 
-import '../Models/Student.dart';
-import '../Models/Teacher.dart';
-import '../Providers/login_provider.dart';
-import '../ViewModels/connection_view_model.dart';
-import 'AppBarPages/calendar_view.dart';
+
 
 class Navigation extends StatefulWidget {
    Navigation({Key? key}) : super(key: key);
