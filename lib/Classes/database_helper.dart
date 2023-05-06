@@ -23,7 +23,7 @@ class DatabaseHelper{
   Future _onCreate(Database db,int version) async{
     await db.execute(""
         "CREATE TABLE Notifications("
-        "id INTEGER PRIMARY KEY, "
+        "id INTEGER, "
         "title TEXT, "
         "description TEXT, "
         "type text, "
@@ -52,5 +52,10 @@ class DatabaseHelper{
   Future<int> deleteConnectionNotifications() async{
     Database db = await instance.database;
     return await db.delete("Notifications",where: "type = 'Type.Connection'");
+  }
+
+  Future<int> deleteConnectionNotificationWithId(int id) async{
+    Database db = await instance.database;
+    return await db.delete("Notifications",where: "id = $id");
   }
 }

@@ -41,7 +41,7 @@ class Notification{
 
   Map<String,dynamic> toMap(){
     return {
-
+      "id" : id,
       'title':title,
       'description':description,
       'type':type.toString(),

@@ -15,19 +15,25 @@ class Notifications extends StatefulWidget {
 class _NotificationsState extends State<Notifications> {
 
   // ListNotificationsViewModel _listNotificationsViewModel = ListNotificationsViewModel();
-  List<NotificationModel.Notification> _notifications = [];
-
+  // List<NotificationModel.Notification> _notifications = [];
+  //
+  refresh() {
+    setState(() {});
+  }
   initialise() async{
-    var temp  = await DatabaseHelper.instance.getNotifications();
+    await context.read<ListNotificationsViewModel>().getNotifications();
     setState(() {
-      _notifications = temp;
+
     });
   }
 
   @override
   void initState() {
     super.initState();
-    initialise();
+
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => initialise());
+
   }
 
   @override
@@ -38,9 +44,10 @@ class _NotificationsState extends State<Notifications> {
         shrinkWrap: true,
 
           itemBuilder: (_, index){
-          NotificationModel.Notification notification = _notifications[index];
+          var vm = context.watch<ListNotificationsViewModel>();
+          NotificationModel.Notification notification = vm.notifications[index].notification;
             if(notification.type == NotificationModel.Type.Connection){
-              return RequestWidget(notification: notification,);
+              return RequestWidget(notification: notification,notifyParent: refresh,);
             }
             return ListTile(
               title: Text("Notification number $index",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
@@ -48,7 +55,7 @@ class _NotificationsState extends State<Notifications> {
             );
           },
           separatorBuilder: (_, index) => Divider(thickness: 2,),
-          itemCount: _notifications.length)
+          itemCount: context.watch<ListNotificationsViewModel>().notifications.length)
     );
   }
 }

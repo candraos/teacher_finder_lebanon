@@ -1,15 +1,20 @@
 import 'dart:typed_data';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:image_picker_widget/image_picker_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teacher_finder_lebanon/Models/Notification.dart' as NotificationModel;
+import 'package:teacher_finder_lebanon/Models/Student.dart';
+import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
+
+import '../ViewModels/notification_view_model.dart';
 
 class RequestWidget extends StatefulWidget {
-   RequestWidget({Key? key,required this.notification}) : super(key: key);
+   RequestWidget({Key? key,required this.notification, required this.notifyParent}) : super(key: key);
 
   NotificationModel.Notification notification;
+   final Function() notifyParent;
 
   @override
   State<RequestWidget> createState() => _RequestWidgetState();
@@ -27,10 +32,7 @@ class _RequestWidgetState extends State<RequestWidget> {
           .from('tf-bucket')
           .download(widget.notification.user.image!);
   }
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,27 @@ class _RequestWidgetState extends State<RequestWidget> {
                 Expanded(
 
                   child: ElevatedButton(
-                      onPressed: (){},
+                      onPressed: ()async{
+                        bool success = await ConnectionViewModel().Accept(widget.notification.id!);
+                        if(success){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.notification.user.firstName} ${widget.notification.user.lastName} is now your"
+                          "${widget.notification.user is Student ? "Student"  : "Teacher"}"),action: SnackBarAction(
+                            label: "Dismiss",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            },
+                          ),));
+                         widget.notifyParent();
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Occurred, please try again later"),action: SnackBarAction(
+                            label: "Dismiss",
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            },
+                          ),));
+
+                        }
+                      },
                       child: Text("Accept")),
                 ),
                 SizedBox(width: 10,),
@@ -66,7 +88,26 @@ class _RequestWidgetState extends State<RequestWidget> {
 
                   child: ElevatedButton(
 
-                    onPressed: (){},
+                    onPressed: () async{
+                      bool success = await ConnectionViewModel().Reject(widget.notification.id!);
+                      if(success){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection Rejected"),action: SnackBarAction(
+                          label: "Dismiss",
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          },
+                        ),));
+                        widget.notifyParent();
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Occurred, please try again later"),action: SnackBarAction(
+                          label: "Dismiss",
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          },
+                        ),));
+
+                      }
+                    },
                     child: Text("Reject"),
                     style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).errorColor),),
                 ),

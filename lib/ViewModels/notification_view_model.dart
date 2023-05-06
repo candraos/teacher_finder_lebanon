@@ -9,14 +9,24 @@ class ListNotificationsViewModel with ChangeNotifier{
   int get newNotifications => _newNotifications;
   // NotificationModel.NotificationFactory _notificationFactory = NotificationModel.NotificationFactory();
 
-  void addNotification(NotificationViewModel notificationViewModel){
+
+  Future getNotifications() async{
+    notifications.clear();
+    var notificationsList = await DatabaseHelper.instance.getNotifications();
+    notificationsList.forEach((n) { notifications.add(NotificationViewModel(n));});
+  }
+
+  removeNotification(int id){
+    notifications.removeWhere((n) => n.notification.id == id);
+    notifyListeners();
+  }
+
+  Future addNotification(NotificationViewModel notificationViewModel) async{
     try{
       DatabaseHelper helper = DatabaseHelper.instance;
-      helper.addNotification(notificationViewModel.notification).then((value)  {
+      await helper.addNotification(notificationViewModel.notification).then((value)  {
         notifications.add(notificationViewModel);
         _newNotifications = _newNotifications + 1;
-        print("_new $_newNotifications");
-        print("new $newNotifications");
         notifyListeners();
       });
 

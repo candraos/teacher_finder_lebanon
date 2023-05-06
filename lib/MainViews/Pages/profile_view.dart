@@ -175,7 +175,7 @@ class _ProfileState extends State<Profile> {
                                             ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                           },
                                         ),));
-                                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Login()));
+                                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => Login()),(r) => false);
 
                                       },
                                       child: Text("yes")),

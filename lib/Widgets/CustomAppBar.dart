@@ -46,12 +46,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
     }
     context.read<LoginProvider>().update(user);
     await context.read<ListTopicsViewModel>().fetchUserTopics(user.id);
-    await  _connectionViewModel.fetch(context).then((value) => setState(() {
-       newNotifications = context.read<ListNotificationsViewModel>().newNotifications;
-       print(newNotifications);
-     })
-     );
-
+    int notifications = await _connectionViewModel.fetch(context);
+    setState(() {
+      newNotifications = notifications;
+      print(newNotifications);
+    });
 
   }
 
@@ -82,9 +81,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           IconButton(
               onPressed: () => context.read<PageProvider>().changePage(Notifications()),
               icon: Badge(
-                  showBadge: newNotifications != 0,
+                  showBadge: context.watch<ListNotificationsViewModel>().newNotifications != 0,
                   position: BadgePosition.topEnd(top: 0, end: 7),
-                  badgeContent:Text("${newNotifications}",style: TextStyle(color: Colors.white),),
+                  badgeContent:Text("${context.watch<ListNotificationsViewModel>().newNotifications}",style: TextStyle(color: Colors.white),),
                   child: Icon(widget.notificationIcon,))
           ),
 
