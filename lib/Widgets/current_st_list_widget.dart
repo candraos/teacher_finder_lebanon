@@ -8,8 +8,14 @@ import 'package:teacher_finder_lebanon/ViewModels/student_teacher_view_model.dar
 
 import '../Models/Student.dart';
 
-class CurrentSTList extends StatelessWidget {
+class CurrentSTList extends StatefulWidget {
    CurrentSTList({Key? key}) : super(key: key);
+
+  @override
+  State<CurrentSTList> createState() => _CurrentSTListState();
+}
+
+class _CurrentSTListState extends State<CurrentSTList> {
 List<dynamic> images = [];
 
 getImages(String path) async{
@@ -27,7 +33,7 @@ images.add(img);
       stream: context.watch<StudentTeacherViewModel>().getCurrent(context),
         builder: (_,snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
-          if ( snapshot.data != null)
+          if (snapshot.data != null)
         return ListView.separated(
             itemBuilder: (BuildContext ctx, int index) {
               var user = snapshot.data?[index]["${context.read<LoginProvider>().user is Student ? "Teacher" : "Student"}"];
@@ -57,7 +63,29 @@ images.add(img);
                           style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).errorColor
                           ),
-                          onPressed: (){
+                          onPressed: () async{
+                            StudentTeacherViewModel vm = StudentTeacherViewModel();
+                            bool success = await vm.remove(snapshot.data[index]["id"]);
+                            if(success){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${user["firstName"]} ${user["lastName"]} is no longer your ${
+                                context.read<LoginProvider>().user is Student? "teacher" : "student"
+                              }"),action: SnackBarAction(
+                                label: "Dismiss",
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                },
+                              ),));
+                              setState(() {
+
+                              });
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occurred, please try again later"),action: SnackBarAction(
+                                label: "Dismiss",
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                },
+                              ),));
+                            }
                           },
                           child: Text("Remove",style: TextStyle(fontSize: 13),)
                       ),

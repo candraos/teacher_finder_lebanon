@@ -36,4 +36,15 @@ class StudentTeacherViewModel with ChangeNotifier{
     return stream;
   }
 
+  Future<bool> remove(int id) async{
+    try{
+      await _supabase.from("StudentTeacher").update({
+        "isActive" : false,
+      }).eq("id", id);
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
 }

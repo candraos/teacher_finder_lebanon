@@ -9,9 +9,14 @@ import '../Models/Student.dart';
 import '../Providers/login_provider.dart';
 import '../ViewModels/student_teacher_view_model.dart';
 
-class PreviousSTList extends StatelessWidget {
+class PreviousSTList extends StatefulWidget {
    PreviousSTList({Key? key}) : super(key: key);
 
+  @override
+  State<PreviousSTList> createState() => _PreviousSTListState();
+}
+
+class _PreviousSTListState extends State<PreviousSTList> {
   List<dynamic> images = [];
 
   getImages(String path) async{
@@ -58,12 +63,10 @@ class PreviousSTList extends StatelessWidget {
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         width: 100,
                         child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).errorColor
-                            ),
+
                             onPressed: (){
                             },
-                            child: Text("Remove",style: TextStyle(fontSize: 13),)
+                            child: Text("Feedback",style: TextStyle(fontSize: 13),)
                         ),
                       ),
                     );
