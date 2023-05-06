@@ -24,10 +24,7 @@ class _LoginState extends State<Login> {
   TextEditingController _passwordController = TextEditingController();
   bool _isVisible = false;
 
-  void temp() async{
-    final supabase = Supabase.instance.client;
-    await supabase.auth.signOut();
-  }
+
 
   void toggleVisibility(){
     setState(() {

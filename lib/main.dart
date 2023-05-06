@@ -22,6 +22,8 @@ import 'Providers/login_provider.dart';
 import 'Providers/user_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
+import 'ViewModels/student_teacher_view_model.dart';
+
 Future _initialise() async{
   await Future.delayed(Duration(seconds: 1));
   final _storage =  FlutterSecureStorage();
@@ -50,6 +52,7 @@ await _initialise();
   runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (_) => StudentTeacherViewModel()),
           ChangeNotifierProvider(create: (_) => ListNotificationsViewModel()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
           ChangeNotifierProvider(create: (_) => SearchViewModel()),
