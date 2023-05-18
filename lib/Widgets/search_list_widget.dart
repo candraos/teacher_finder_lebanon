@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+import 'package:image_picker_widget/image_picker_widget.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/search_view.dart';
 import 'package:teacher_finder_lebanon/Models/Connection.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
 import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
+import 'package:teacher_finder_lebanon/ViewModels/search_vm.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
 import 'package:provider/provider.dart';
 
@@ -42,7 +45,14 @@ class _SearchListState extends State<SearchList> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset("assets/profilepic.png",height: 70,width: 70,),
+                  ImagePickerWidget(
+                    diameter: 70,
+
+                    initialImage:context.watch<SearchViewModel>().images[i] == null? Image(image: Svg("assets/profile-logo.svg"),).image : Image.memory(context.watch<SearchViewModel>().images[i]).image,
+                    shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
+                    isEditable: false,
+
+                  ),
                   Text("${widget.users[i].firstName} ${widget.users[i].lastName}",style: TextStyle(fontSize: 20),),
                   // for(int index = 0;index < topics.length; index++)
                   Text(userTopics,textAlign: TextAlign.center,style: TextStyle(fontSize: 16),),

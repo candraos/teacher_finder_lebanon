@@ -11,6 +11,7 @@ import '../Models/Teacher.dart';
 
 class SearchViewModel with ChangeNotifier{
   List<model.User> users = [];
+  List<dynamic> images = [];
   List<ListTopicsViewModel> topics = [];
   final _supabase = Supabase.instance.client;
   Future<void> search(String keyword,BuildContext context) async{
@@ -26,14 +27,18 @@ class SearchViewModel with ChangeNotifier{
       users = (result as List<dynamic>).map((userJson) => Teacher.fromJson(userJson)).toList()
       :  users = (result as List<dynamic>).map((userJson) => Student.fromJson(userJson)).toList();
 
-    for(int index = 0;index < users.length; index = index+1){//try for each
+    for(int index = 0;index < users.length; index = index+1){
+      if(users[index].image != null)
+      images.add(await _supabase
+          .storage
+          .from('tf-bucket')
+          .download(users[index].image!));
       var list = ListTopicsViewModel();
       await list.fetchUserTopics(users[index].id);
       topics.add(list);
       // print("hi");
     }
 
-    topics.forEach((element) {print(element.userTopics);});
     }else{
       users = [];
       topics= [];

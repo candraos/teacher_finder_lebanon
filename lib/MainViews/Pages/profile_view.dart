@@ -12,6 +12,7 @@ import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/edit_profile_
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/reviews_view.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
 import 'package:teacher_finder_lebanon/Registration/login_view.dart';
+import 'package:teacher_finder_lebanon/ViewModels/feedback_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
 import 'package:teacher_finder_lebanon/Widgets/review_widget.dart';
 
@@ -255,9 +256,17 @@ class _ProfileState extends State<Profile> {
                   if(context.read<LoginProvider>().user is Teacher)
                     SizedBox(height: 20,),
                   if(context.read<LoginProvider>().user is Teacher)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      child: ReviewWidget(),
+                    FutureBuilder(
+                      future: context.read<ListFeedbackViewModel>().get(context.read<LoginProvider>().user.id),
+                      builder: (context, snapshot) {
+                        if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
+                        if(context.read<ListFeedbackViewModel>().feedbacks.length > 0)
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ReviewWidget(feedback: context.read<ListFeedbackViewModel>().feedbacks[0].feedback,),
+                        );
+                        return Container();
+                      }
                     ),
                   if(context.read<LoginProvider>().user is Teacher)
                     SizedBox(height: 20,),

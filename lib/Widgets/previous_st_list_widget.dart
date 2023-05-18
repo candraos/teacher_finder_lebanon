@@ -4,6 +4,7 @@ import 'package:image_picker_widget/image_picker_widget.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/feedback_view.dart';
 import 'package:provider/provider.dart';
+import 'package:teacher_finder_lebanon/Models/Teacher.dart';
 
 import '../Models/Student.dart';
 import '../Providers/login_provider.dart';
@@ -19,13 +20,15 @@ class PreviousSTList extends StatefulWidget {
 class _PreviousSTListState extends State<PreviousSTList> {
   List<dynamic> images = [];
 
-  getImages(String path) async{
+  getImages(String? path) async{
+if(path != null){
+  var img =  await Supabase.instance.client
+      .storage
+      .from('tf-bucket')
+      .download(path);
+  images.add(img);
+}
 
-    var img =  await Supabase.instance.client
-        .storage
-        .from('tf-bucket')
-        .download(path);
-    images.add(img);
   }
 
   @override
@@ -33,8 +36,6 @@ class _PreviousSTListState extends State<PreviousSTList> {
     return StreamBuilder(
       stream: context.watch<StudentTeacherViewModel>().getPrevious(context),
       builder: (_,snapshot) {
-        print("hi");
-        print(snapshot.data);
         if(snapshot.connectionState == ConnectionState.waiting) return Center(child: CircularProgressIndicator(),);
         if (snapshot.data != null)
         return ListView.separated(
@@ -59,16 +60,19 @@ class _PreviousSTListState extends State<PreviousSTList> {
                           shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
                           isEditable: false
                       ),
-                      trailing: Container(
+                      trailing:context.read<LoginProvider>().user is Student ? Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         width: 100,
                         child: ElevatedButton(
 
                             onPressed: (){
+
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SubmitFeedback(student: context.read<LoginProvider>().user as Student, teacher: Teacher.fromJson(user),)));
                             },
                             child: Text("Feedback",style: TextStyle(fontSize: 13),)
                         ),
-                      ),
+                      )
+                    : null,
                     );
                   }
               );
