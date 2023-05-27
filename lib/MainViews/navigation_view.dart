@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
 import 'package:teacher_finder_lebanon/Widgets/CustomAppBar.dart';
+
 import 'package:provider/provider.dart';
+import '../Models/Student.dart';
+import '../Providers/login_provider.dart';
+import '../Providers/session_provider.dart';
 
 
 
@@ -19,6 +23,7 @@ class _NavigationState extends State<Navigation> {
   @override
   void initState() {
     super.initState();
+
 
   }
 

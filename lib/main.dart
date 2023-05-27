@@ -1,5 +1,6 @@
 
 
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ import 'Models/User.dart';
 import 'Providers/login_provider.dart';
 import 'Providers/user_provider.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-
+import 'package:provider/provider.dart';
 import 'ViewModels/student_teacher_view_model.dart';
 
 Future _initialise() async{
@@ -32,6 +33,7 @@ Future _initialise() async{
 
   var user;
   if(email != null){
+
     widget = Navigation();
   }else{
     widget = Login();

@@ -86,6 +86,7 @@ class _SubmitFeedbackState extends State<SubmitFeedback> {
                     },
                   ),));
                    toggle();
+                   if(success)
                   Navigator.of(context).pop();
                 }
               },

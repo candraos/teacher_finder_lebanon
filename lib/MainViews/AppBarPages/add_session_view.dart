@@ -5,14 +5,19 @@ import 'package:provider/provider.dart';
 import 'package:teacher_finder_lebanon/Providers/session_provider.dart';
 
 import '../../Models/Session.dart';
+import '../../Models/Student.dart';
+import '../../Models/Teacher.dart';
 
 class AddSession extends StatefulWidget {
-  const AddSession({Key? key}) : super(key: key);
+  const AddSession({Key? key, required this.student,required this.teacher}) : super(key: key);
+
+  final Student student;
+  final Teacher teacher;
 
   @override
   _AddSessionState createState() => _AddSessionState();
 }
-
+final _formKey = GlobalKey<FormState>();
 class _AddSessionState extends State<AddSession> {
 
   TextEditingController _titleController = TextEditingController();
@@ -36,6 +41,7 @@ class _AddSessionState extends State<AddSession> {
               children: [
                 // Spacer(),
                 Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       TextFormField(
@@ -43,12 +49,24 @@ class _AddSessionState extends State<AddSession> {
                         decoration: InputDecoration(
                           hintText: "Title"
                         ),
+                        validator: (value){
+                          if(value == "" || value == null){
+                            return "Please enter the session title";
+                          }
+                          return null;
+                        },
                       ),
 
                       TextFormField(
                         readOnly: true,
                         controller: _dateController,
                         keyboardType: TextInputType.datetime,
+                        validator: (value){
+                          if(value == "" || value == null){
+                            return "Please enter the session date";
+                          }
+                          return null;
+                        },
                         onTap: () async {
                           DateTime? pickedDate = await showDatePicker(
                               context: context,
@@ -79,6 +97,12 @@ class _AddSessionState extends State<AddSession> {
                            child: TextFormField(
                              readOnly: true,
                              controller: _startTimeController,
+                             validator: (value){
+                               if(value == "" || value == null){
+                                 return "Please enter the session start time";
+                               }
+                               return null;
+                             },
                              onTap: () async{
                                TimeOfDay? pickedTime =  await showTimePicker(
                                  initialTime: TimeOfDay.now(),
@@ -103,6 +127,12 @@ class _AddSessionState extends State<AddSession> {
                            child: TextFormField(
                              readOnly: true,
                              controller: _endTimeController,
+                             validator: (value){
+                               if(value == "" || value == null){
+                                 return "Please enter the session end time";
+                               }
+                               return null;
+                             },
                              onTap: () async{
                                TimeOfDay? pickedTime =  await showTimePicker(
                                  initialTime: TimeOfDay.now(),
@@ -138,16 +168,40 @@ class _AddSessionState extends State<AddSession> {
                 // Spacer(),
                 SizedBox(height: 20,),
                 ElevatedButton(
-                  onPressed: (){
+                  onPressed: () async{
 
+                    if(_formKey.currentState!.validate()){
+                      if(start.isAfter(end) || start.isAtSameMomentAs(end)){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Invalid Time Range"),action: SnackBarAction(
+                          label: "Dismiss",
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                          },
+                        ),));
+                        return;
+                      }
+                      Session session = Session(
+                          title: _titleController.text.trim(),
+                          description: _descriptionController.text,
+                          date: date,
+                          startTime: start,
+                          endTime: end,
+                          student: widget.student,
+                          teacher: widget.teacher
+                      );
+                      bool success = await context.read<SessionProvider>().addSession(session
+                      );
+                      String message = success ? "Session scheduled successfully" : "Error occurred, please try again later";
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message),action: SnackBarAction(
+                        label: "Dismiss",
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        },
+                      ),));
+                      if(success)
+                      Navigator.of(context).pop();
+                    }
 
-                    //
-                    // CalendarControllerProvider.of(context).controller.add(event);
-                    context.read<SessionProvider>().addSession(Session(
-                        _titleController.text.trim(),_descriptionController.text,date,start,end
-                    )
-                    );
-                    Navigator.of(context).pop();
                   },
                   child: Text("Schedule"),
                 ),

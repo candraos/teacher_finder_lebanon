@@ -1,6 +1,8 @@
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
+import '../../Models/Student.dart';
 import 'add_session_view.dart';
 
 import '../../Providers/session_provider.dart';
@@ -15,8 +17,17 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
 
- var _controller = EventController();
 
+
+
+@override
+  void initState() {
+    super.initState();
+
+    context.read<SessionProvider>().FetchSessions(
+  context.read<LoginProvider>().user.id,
+        context.read<LoginProvider>().user is Student ? "Student" : "Teacher");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +35,17 @@ class _CalendarState extends State<Calendar> {
         body: WeekView(
           controller: context.watch<SessionProvider>().controller,
           showLiveTimeLineInAllDays: true,
+          onEventTap: (event,time){
+            print(event);
+            print(time);
+          },
           // eventArranger: SideEventArranger(),
           // onCellTap: (events,Time){
           //   print("clicked events $events and time $Time");
           // },
 
         ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () { Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddSession())); },
-        child: Icon(Icons.add_sharp),
-      ),
+
     );
   }
 }
