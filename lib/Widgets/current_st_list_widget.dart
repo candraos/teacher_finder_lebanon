@@ -113,14 +113,16 @@ if(path != null){
                         }
                     );
 
-                  return Container();
+                  return Center(
+                    child: Text("You have no current ${user.user is Student ? "teachers" : "students"}",textAlign: TextAlign.center,style: TextStyle(color: Colors.black,fontSize: 20),),
+                  );
                 },
                 separatorBuilder:(context, index) => Divider(color: Colors.black),
                 itemCount: snapshot.data != null ? snapshot.data!.length : 0
             );
 
             return Center(
-              child: Text("You have no current teachers",style: TextStyle(color: Colors.black),),
+              child: Text("We couldn\'t get your ${user.user is Student ? "teachers" : "students"} at the moment",textAlign: TextAlign.center,style: TextStyle(color: Colors.black,fontSize: 20),),
             );
 
             },

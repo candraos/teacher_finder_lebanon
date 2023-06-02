@@ -42,7 +42,7 @@ if(path != null){
             itemBuilder: (BuildContext ctx, int index) {
               var user = snapshot.data?[index]["${context.read<LoginProvider>().user is Student ? "Teacher" : "Student"}"];
 
-
+              if(user != null)
               return FutureBuilder(
                   future: getImages( user["image"]),
                   builder: (context,s) {
@@ -77,13 +77,17 @@ if(path != null){
                     );
                   }
               );
+
+              return Center(
+                child: Text("You have no previous ${user.user is Student ? "teachers" : "students"}",textAlign: TextAlign.center,style: TextStyle(color: Colors.black,fontSize: 20),),
+              );
             },
             separatorBuilder:(context, index) => Divider(color: Colors.black),
             itemCount: snapshot.data != null ? snapshot.data!.length : 0
         );
 
         return Center(
-          child: Text("You have no previous teachers",style: TextStyle(color: Colors.black),),
+          child: Text("We couldn\'t get your ${context.read<LoginProvider>().user is Student ? "teachers" : "students"} at the moment",textAlign: TextAlign.center,style: TextStyle(color: Colors.black,fontSize: 20),),
         );
 
       },
