@@ -12,14 +12,12 @@ class StudentTeacherViewModel with ChangeNotifier{
 
   Stream getCurrent(BuildContext context) {
     var user = context.read<LoginProvider>().user;
-
     String column = user is Student ? "studentID" : "teacherID";
     String table = user is Student ? "Teacher" : "Student";
     Stream stream = _supabase.from("StudentTeacher")
         .select("*,$table!inner(*)").match({
       column : user.id,
       "isActive" : true,
-      // "$table.customid" : "StudentTeacher.$column"
     }).asStream();
 
     return stream;

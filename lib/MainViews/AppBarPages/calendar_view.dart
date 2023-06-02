@@ -35,14 +35,7 @@ class _CalendarState extends State<Calendar> {
         body: WeekView(
           controller: context.watch<SessionProvider>().controller,
           showLiveTimeLineInAllDays: true,
-          onEventTap: (event,time){
-            print(event);
-            print(time);
-          },
-          // eventArranger: SideEventArranger(),
-          // onCellTap: (events,Time){
-          //   print("clicked events $events and time $Time");
-          // },
+
 
         ),
 

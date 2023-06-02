@@ -51,7 +51,8 @@ if(path != null){
                     return ListTile(
                       title: Row(
                         children: [
-                          Expanded(child: Text("${user["firstName"]} ${user["lastName"]}")),
+                          Expanded(child: Text("${user["firstName"]} ${user["lastName"]}",
+                            style: TextStyle(fontSize: 17),)),
                         ],
                       ),
                       leading: ImagePickerWidget(

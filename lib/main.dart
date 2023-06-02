@@ -8,6 +8,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:teacher_finder_lebanon/Classes/Services/message_service.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/home_view.dart';
 import 'package:teacher_finder_lebanon/MainViews/navigation_view.dart';
 import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
@@ -56,6 +57,7 @@ await _initialise();
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ListFeedbackViewModel()),
+          ChangeNotifierProvider(create: (_) => MessageService()),
           ChangeNotifierProvider(create: (_) => StudentTeacherViewModel()),
           ChangeNotifierProvider(create: (_) => ListNotificationsViewModel()),
           ChangeNotifierProvider(create: (_) => UserProvider()),
