@@ -38,11 +38,15 @@ class UserViewModel{
           "role": "Student",
           "firstName": context.read<UserProvider>().user.firstName,
           "lastName": context.read<UserProvider>().user.lastName,
-          "section" : context.read<UserProvider>().user.section
+          "section" : context.read<UserProvider>().user.section,
+          "latitude" : context.read<UserProvider>().user.latitude,
+          "longitude" : context.read<UserProvider>().user.longitude
         };
       else{
         data = {
           // "id" : user.id,
+          "latitude" : context.read<UserProvider>().user.latitude,
+          "longitude" : context.read<UserProvider>().user.longitude,
           "role": "Teacher",
           "firstName": context.read<UserProvider>().user.firstName,
           "lastName": context.read<UserProvider>().user.lastName,
@@ -135,16 +139,20 @@ class UserViewModel{
     user.lastName = userData["lastName"];
     user.section = userData["section"];
     user.image = userData["image"];
+
     user.email = loginres.user!.email;
     user.id = loginres.user!.id;
     await user.toStorage();
     context.read<LoginProvider>().update(user);
   }
 
-  Future<void> fetchUser(int id,String table) async{
-    late User user;
+  Future<dynamic> fetchUser(String id,String table) async{
     final response = await supabase.from(table).select().eq("customid", id);
-    print(response);
+    if(table == "Student"){
+      return Student.fromJson(response[0]);
+    }else{
+      return Teacher.fromJson(response[0]);
+    }
     // return user;
   }
 

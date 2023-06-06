@@ -17,6 +17,8 @@ class SessionProvider with ChangeNotifier{
 
   Future FetchSessions(String id,String table) async{
     try{
+      sessions = [];
+      _controller.removeWhere((element) => true);
       String column = table == "Student" ? "studentID" : "teacherID";
       final result = await _client.from("Session").select("*,Student!inner(*),Teacher!inner(*)").eq(column, id);
       (result as List<dynamic>).map((sessionJson) => sessions.add(model.Session.fromJson(sessionJson))).toList();
@@ -25,6 +27,10 @@ class SessionProvider with ChangeNotifier{
       sessions = [];
     }
   }
+
+  // model.Session getSession({required DateTime date, required DateTime start, required DateTime end}){
+  //   return sessions.where((session) => session.date == date && session.startTime = start && session.endTime == end);
+  // }
 
   Future<bool> addSession(model.Session session)async{
    try{
@@ -41,12 +47,14 @@ class SessionProvider with ChangeNotifier{
   }
 
   _addToCalendar(model.Session session){
+
     _controller.add(CalendarEventData(
         title: session.title,
         date: session.date,
         startTime: session.startTime,
         endTime: session.endTime,
-        description: session.description
+        description: session.description,
+event: session.toJson()
     ));
     notifyListeners();
   }

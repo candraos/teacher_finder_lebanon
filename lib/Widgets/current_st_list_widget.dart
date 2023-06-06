@@ -54,11 +54,11 @@ if(path != null){
                           return ListTile(
                             onTap: (){
                               var s,t;
-                              if(user is Student){
+                              if(user.user is Student){
                                 s = context.read<LoginProvider>().user;
                                 t = Teacher.fromJson(fetchedUser);
                               }else{
-                                t = user;
+                                t = context.read<LoginProvider>().user;
                                 s = Student.fromJson(fetchedUser);
                               }
                               Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddSession(student: s,teacher: t,)));

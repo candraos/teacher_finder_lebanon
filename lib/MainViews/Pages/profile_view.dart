@@ -32,10 +32,11 @@ class _ProfileState extends State<Profile> {
   var client = Supabase.instance.client;
   Uint8List? userImage;
   var user;
+  double latitude = 0,longitude = 0;
   _fetchTopics() async{
     var provider = context.read<LoginProvider>();
      user = provider.user;
-     print(user.image);
+
     if(user.image != null)
      userImage = await client
          .storage
@@ -43,6 +44,14 @@ class _ProfileState extends State<Profile> {
          .download(user.image);
      await _topicsViewModel.fetchUserTopics(provider.user.id);
 
+     String table = user is Student ? "Student" : "Teacher";
+
+     final query = await client.from(table).select("latitude,longitude").eq("customid", user.id);
+
+     latitude = query[0]["latitude"];
+     longitude = query[0]["longitude"];
+    print(latitude);
+    print(longitude);
   }
 
 @override
@@ -100,7 +109,7 @@ class _ProfileState extends State<Profile> {
                                   .from('tf-bucket')
                                   .download(user.image);
 
-                              provider..update(user);
+                              provider.update(user);
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile Updated Successfully!"),action: SnackBarAction(
                                 label: "Dismiss",
                                 onPressed: () {
@@ -273,6 +282,9 @@ class _ProfileState extends State<Profile> {
                         ),
                       if(provider.user is Teacher)
                         SizedBox(height: 20,),
+
+
+
                     ],
                   ),
                 );

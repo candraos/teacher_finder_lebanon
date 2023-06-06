@@ -10,7 +10,6 @@ class Session{
   late DateTime date,startTime,endTime;
 
   Session.fromJson(Map<String,dynamic> json){
-    print(json);
     id = json['id'];
     title = json['title'];
     description = json['description'];

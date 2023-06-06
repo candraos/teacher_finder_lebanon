@@ -23,7 +23,7 @@ class FeedbackModel{
 
   FeedbackModel.fromJson(Map<String,dynamic> json){
     id = json['id'];
-    rating = json['rating'];
+    rating = double.parse(json['rating'].toString());
     description = json['description'];
     date = json['created_at'];
     date = date.split('T')[0];
