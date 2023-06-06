@@ -60,7 +60,7 @@ class _CalendarState extends State<Calendar> {
               teacher:teacher
 
             );
-
+            session.id = jsonDecode(jsonEncode(event.event))["id"];
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => ViewSession(session: session)));
           },
 

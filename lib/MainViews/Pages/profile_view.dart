@@ -11,6 +11,7 @@ import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/change_topics
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/edit_profile_view.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/reviews_view.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
+import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
 import 'package:teacher_finder_lebanon/Registration/login_view.dart';
 import 'package:teacher_finder_lebanon/ViewModels/feedback_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
@@ -182,6 +183,7 @@ class _ProfileState extends State<Profile> {
                                             await supabase.auth.signOut();
                                             final _storage =  FlutterSecureStorage();
                                             await _storage.deleteAll();
+                                            context.read<PageProvider>().changeIndex(0);
                                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Logged out successfully"),action: SnackBarAction(
                                               label: "Dismiss",
                                               onPressed: () {

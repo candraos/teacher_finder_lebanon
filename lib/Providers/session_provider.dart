@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -44,6 +46,20 @@ class SessionProvider with ChangeNotifier{
    }catch(e){
      return false;
    }
+  }
+  
+  Future<bool> removeSession(int id) async {
+    try{
+       await _client.from("Session").delete().eq("id", id).then((value) {
+         _controller.removeWhere((event) => jsonDecode(jsonEncode(event.event))["id"]);
+         notifyListeners();
+         return true;
+       });
+       notifyListeners();
+      return true;
+    }catch(e){
+      return false;
+    }
   }
 
   _addToCalendar(model.Session session){
