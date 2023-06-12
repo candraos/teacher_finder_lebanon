@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:teacher_finder_lebanon/Registration/choose_topics_view.dart';
 import 'package:provider/provider.dart';
 
+import '../Models/Student.dart';
 import '../Providers/user_provider.dart';
 
 class ChooseSection extends StatefulWidget {
@@ -22,7 +23,7 @@ class _ChooseSectionState extends State<ChooseSection> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Choose the section you are teaching in",
+            Text("Choose the section you are ${context.read<UserProvider>().user is Student ? "learning" : "teaching"} in",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30,

@@ -2,38 +2,43 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'package:teacher_finder_lebanon/ViewModels/user_vm.dart';
+import 'package:teacher_finder_lebanon/Registration/ForgotPassword/change_password.dart';
 
-import '../MainViews/navigation_view.dart';
+import '../../ViewModels/user_vm.dart';
 
+class VerifyEmail extends StatefulWidget {
+  const VerifyEmail({Key? key, required this.email}) : super(key: key);
 
-class EmailCode extends StatefulWidget {
-  const EmailCode({Key? key}) : super(key: key);
+  final String email;
 
   @override
-  _EmailCodeState createState() => _EmailCodeState();
+  _VerifyEmailState createState() => _VerifyEmailState();
 }
-StreamController<ErrorAnimationType> errorController = StreamController<ErrorAnimationType>()..add(ErrorAnimationType.shake);
-bool isVisible = false;
-bool isCircularVisible = false;
-class _EmailCodeState extends State<EmailCode> {
+
+class _VerifyEmailState extends State<VerifyEmail> {
+
+  StreamController<ErrorAnimationType> errorController = StreamController<ErrorAnimationType>()..add(ErrorAnimationType.shake);
+
+
+  bool _isVisible = false;
+  bool _isErrorVisible = false;
+
 
   toggleVisibility(){
     setState(() {
-      isCircularVisible = !isCircularVisible;
+      _isVisible = !_isVisible;
+    });
+  }
+
+  toggleError(){
+    setState(() {
+      _isErrorVisible = !_isErrorVisible;
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-
-
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return  WillPopScope(
       onWillPop: () async =>  false,
       child: Scaffold(
         body: Column(
@@ -48,10 +53,11 @@ class _EmailCodeState extends State<EmailCode> {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 30),
               child: Form(
+
                 child: Column(
                   children: [
                     Visibility(
-                      visible: isCircularVisible,
+                        visible: _isVisible,
                         child: CircularProgressIndicator()
                     ),
                     PinCodeTextField(
@@ -62,28 +68,28 @@ class _EmailCodeState extends State<EmailCode> {
 
                       onCompleted: (String code) async {
                         toggleVisibility();
+                        setState(() {
+                          _isErrorVisible = false;
+                        });
                         try{
-                         await UserViewModel().verify(context, code);
-                          setState(() {
-                            isVisible = false;
-                          });
+                          await UserViewModel().verifyChangePassword(widget.email, code);
 
                           toggleVisibility();
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Navigation()));
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ChangePassword(email: widget.email)));
                         }catch( e){
-                          toggleVisibility();
-                          print(e);
                           setState(() {
-                            isVisible = true;
+                            _isErrorVisible = true;
                           });
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occured, please try again later")));
+                          toggleVisibility();
+
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occured, please try again later")));
                         }
                         // toggleVisibility();
 
                       },
                     ),
                     Visibility(
-                      visible: isVisible,
+                        visible: _isErrorVisible,
                         child: Text("Verification Code not recognised",style: TextStyle(color: Theme.of(context).errorColor,fontSize: 20),)),
 
                   ],

@@ -43,6 +43,7 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
+    var user = context.read<LoginProvider>().user;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -51,8 +52,8 @@ setState(() {
           title: TabBar(
             labelColor: Theme.of(context).primaryColor,
               tabs: [
-                Tab(text: "Current Teachers",),
-                Tab(text: "Previous Teachers",)
+                Tab(text: "Current ${user is Student ? "Teachers" : "Students"}",),
+                Tab(text: "Previous ${user is Student ? "Teachers" : "Students"}",)
               ]
           ),
           backgroundColor: Colors.white,

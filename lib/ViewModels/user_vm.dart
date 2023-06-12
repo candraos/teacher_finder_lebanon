@@ -70,6 +70,12 @@ class UserViewModel{
     return false;
   }
 
+
+  Future<void> verifyChangePassword(String email, String code) async{
+    await supabase.auth.verifyOTP(token: code, type: OtpType.recovery, email: email);
+
+  }
+
   Future<void> verify(BuildContext context,String code) async{
     final AuthResponse res = await supabase.auth.verifyOTP(token: code, type: OtpType.signup,email: context.read<UserProvider>().user.email);
     var topics = context.read<UserProvider>().topics;

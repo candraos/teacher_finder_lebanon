@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_finder_lebanon/Models/Student.dart';
 import 'package:teacher_finder_lebanon/Registration/choose_price_view.dart';
 import 'package:provider/provider.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
@@ -14,7 +15,6 @@ class ChooseTopics extends StatefulWidget {
   @override
   _ChooseTopicsState createState() => _ChooseTopicsState();
 }
-// List<String> topics = ["Arabic","French","English","Geography","History","Maths","Physics","Biology","chemistry","Economics",];
 
 class _ChooseTopicsState extends State<ChooseTopics> {
   ListTopicsViewModel topicsViewModel = ListTopicsViewModel();
@@ -46,7 +46,7 @@ setState(() {
 
           SizedBox(height: 30,),
 
-          Text("Choose the topics you are teaching",
+          Text("Choose the topics you ${context.read<UserProvider>().user  is Student ? "need help with" : "are teaching"}",
             textAlign: TextAlign.center,
             style: TextStyle(
                 fontSize: 30,

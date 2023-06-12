@@ -7,6 +7,7 @@ import 'package:teacher_finder_lebanon/Models/Teacher.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
 import 'package:teacher_finder_lebanon/Registration/choose_role_view.dart';
 import 'package:provider/provider.dart';
+import 'package:teacher_finder_lebanon/Registration/ForgotPassword/forgot_password.dart';
 import '../Models/Student.dart';
 import '../Providers/user_provider.dart';
 import '../ViewModels/user_vm.dart';
@@ -84,9 +85,14 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                       SizedBox(height: 10,),
-                      Align(
-                        alignment: Alignment.centerRight,
-                          child: Text("Forgot Password?",style: TextStyle(color:Theme.of(context).primaryColor,fontSize: 15),))
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => ForgotPassword()));
+                        },
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                            child: Text("Forgot Password?",style: TextStyle(color:Theme.of(context).primaryColor,fontSize: 15),)),
+                      )
                     ],
                   ),
               ),
@@ -145,24 +151,24 @@ class _LoginState extends State<Login> {
                 children: [
                   // Text("Or sign up using",style: TextStyle(fontSize: 20),),
                   // SizedBox(height: 20,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                          "assets/social/facebook-logo.svg",
-                          semanticsLabel: 'Facebook Logo',
-                        width: 60,
-                        height: 60,
-                      ),
-                      SizedBox(width: 20,),
-                      SvgPicture.asset(
-                          "assets/social/google-logo.svg",
-                          semanticsLabel: 'Google Logo',
-                        width: 50,
-                        height: 50,
-                      ),
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     SvgPicture.asset(
+                  //         "assets/social/facebook-logo.svg",
+                  //         semanticsLabel: 'Facebook Logo',
+                  //       width: 60,
+                  //       height: 60,
+                  //     ),
+                  //     SizedBox(width: 20,),
+                  //     SvgPicture.asset(
+                  //         "assets/social/google-logo.svg",
+                  //         semanticsLabel: 'Google Logo',
+                  //       width: 50,
+                  //       height: 50,
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
             ),
