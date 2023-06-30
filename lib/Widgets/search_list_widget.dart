@@ -45,12 +45,22 @@ class _SearchListState extends State<SearchList> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
+                  if(context.watch<SearchViewModel>().images.isNotEmpty)
                   ImagePickerWidget(
                     diameter: 70,
 
                     initialImage:context.watch<SearchViewModel>().images[i] == null? Image(image: Svg("assets/profile-logo.svg"),).image : Image.memory(context.watch<SearchViewModel>().images[i]).image,
                     shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
                     isEditable: false,
+
+                  )
+                  else
+                  ImagePickerWidget(
+                  diameter: 70,
+
+                  initialImage:Image(image: Svg("assets/profile-logo.svg"),).image,
+                  shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
+                  isEditable: false,
 
                   ),
                   Text("${widget.users[i].firstName} ${widget.users[i].lastName}",style: TextStyle(fontSize: 20),),

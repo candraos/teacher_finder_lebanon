@@ -104,6 +104,7 @@ TextEditingController _searchController = TextEditingController();
               child: Center(child: CircularProgressIndicator(),)
           ),
 
+          if(context.watch<SearchViewModel>().users.isNotEmpty)
           Expanded(
             child: SearchList(users: context.watch<SearchViewModel>().users,topics: context.watch<SearchViewModel>().topics),
           )

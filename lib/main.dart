@@ -2,9 +2,6 @@
 
 
 import 'package:calendar_view/calendar_view.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,33 +31,9 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 final supabase = Supabase.instance.client;
 
 Future _initialise() async{
-  // await Future.delayed(Duration(seconds: 1));
+  await Future.delayed(Duration(seconds: 1));
 
-//   await Firebase.initializeApp();
-//   final messaging = FirebaseMessaging.instance;
-//
-//   //Remove this method to stop OneSignal Debugging
-//   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
-//
-//   OneSignal.shared.setAppId("63d03a23-dc6a-4f93-9a3e-fd634a2b5ecc");
-//
-// // The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-//   await OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-//     print("Accepted permission: $accepted");
-//   });
-//   NotificationSettings settings = await messaging.requestPermission(
-//     alert: true,
-//     badge: false,
-//     provisional: false,
-//     sound: true
-//   );
-//
-//   if(settings.authorizationStatus == AuthorizationStatus.authorized){
-//     String? token = await messaging.getToken();
-//     if(token != null){
-//       await supabase.rpc("update_fcm_key",params: { "key" : token});
-//     }
-//   }
+
   final _storage =  FlutterSecureStorage();
   String? email = await _storage.read(key: "email");
 

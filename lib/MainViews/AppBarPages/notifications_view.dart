@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:teacher_finder_lebanon/MainViews/Pages/other_profile_view.dart';
 import '../../Classes/database_helper.dart';
 import '../../ViewModels/notification_view_model.dart';
 import '../../Widgets/request_widget.dart';
@@ -47,7 +48,11 @@ class _NotificationsState extends State<Notifications> {
           var vm = context.watch<ListNotificationsViewModel>();
           NotificationModel.Notification notification = vm.notifications[index].notification;
             if(notification.type == NotificationModel.Type.Connection){
-              return RequestWidget(notification: notification,notifyParent: refresh,);
+              return GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => OtherProfile(user: notification.user)));
+                },
+                  child: RequestWidget(notification: notification,notifyParent: refresh,));
             }
             return ListTile(
               title: Text("Notification number $index",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),

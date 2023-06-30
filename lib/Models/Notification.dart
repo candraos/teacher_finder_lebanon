@@ -29,6 +29,18 @@ class Notification{
    user.firstName = json["firstName"];
    user.lastName = json["lastName"];
    user.image = json["image"];
+   user.email = json["email"];
+   user.id = json["user"];
+   user.section = json["section"];
+   user.latitude = json["latitude"];
+   user.longitude = json["longitude"];
+   user.image = json["image"];
+
+   if(json["price"] != null && json["rating"] != null){
+     user.currency = json["currency"];
+     user.price = double.parse(json["price"].toString());
+     user.rating = double.parse(json["rating"].toString());
+   }
 
    return Notification(
      json["id"],
@@ -46,9 +58,16 @@ class Notification{
       'description':description,
       'type':type.toString(),
       'user':user.id,
+      'latitude':user.latitude,
+      'longitude':user.longitude,
+      'email':user.email,
+      'section':user.section,
       "firstName" : user.firstName,
       "lastName" : user.lastName,
       "image" : user.image,
+      'price':user.price,
+      'rating':user.rating,
+      'currency':user.currency,
       "role" : user is Student ? "Student" : "Teacher"
     };
   }

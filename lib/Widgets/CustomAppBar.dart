@@ -49,7 +49,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
     int notifications = await _connectionViewModel.fetch(context);
     setState(() {
       newNotifications = notifications;
-      print(newNotifications);
     });
 
   }

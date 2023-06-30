@@ -66,13 +66,6 @@ class ConnectionViewModel with ChangeNotifier{
     }
   }
 
-  Future<void> _getUsers(List<Connection> myConnections, dynamic user) async{
-    Iterable<Future<dynamic>> futures = [];
-    myConnections.forEach((connection) async{
-      futures.toList().add(_getUser(connection, user));
-    });
-   await Future.wait(futures);
-}
 
   Future<void> _getUser(Connection connection, dynamic user) async{
     final userQuery = await _supabase.from(user is Student ? "Teacher" : "Student").select().eq("customid", user is Student ? connection.TeacherID : connection.studentID).then((value) async{
@@ -108,7 +101,7 @@ class ConnectionViewModel with ChangeNotifier{
 
   Future<bool> Reject(int id) async{
     try{
-      // final result = await _supabase.from("StudentTeacher").delete().eq("id", id);
+      final result = await _supabase.from("StudentTeacher").delete().eq("id", id);
       await DatabaseHelper.instance.deleteConnectionNotificationWithId(id);
       ListNotificationsViewModel().removeNotification(id);
       return true;

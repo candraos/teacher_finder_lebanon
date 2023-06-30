@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teacher_finder_lebanon/Models/Student.dart';
 import 'package:teacher_finder_lebanon/Widgets/current_st_list_widget.dart';
 import 'package:expandable/expandable.dart';
@@ -22,7 +23,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   initialise()async{
-    if(context.read<LoginProvider>().user == null){
       final storage = FlutterSecureStorage();
       String? c = await storage.read(key: "currency");
       if(c != null){
@@ -31,7 +31,7 @@ class _HomeState extends State<Home> {
         context.read<LoginProvider>().user = await Student().fromStorage();
 
       }
-    }
+
 setState(() {
 
 });
@@ -43,7 +43,8 @@ setState(() {
   }
   @override
   Widget build(BuildContext context) {
-    var user = context.read<LoginProvider>().user;
+    var user = Supabase.instance.client.auth.currentUser?.userMetadata;
+    print(user);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -52,8 +53,8 @@ setState(() {
           title: TabBar(
             labelColor: Theme.of(context).primaryColor,
               tabs: [
-                Tab(text: "Current ${user is Student ? "Teachers" : "Students"}",),
-                Tab(text: "Previous ${user is Student ? "Teachers" : "Students"}",)
+                Tab(text: "Current ${user!["role"] == "Student" ? "Teachers" : "Students"}",),
+                Tab(text: "Previous ${user["role"] == "Student" ? "Teachers" : "Students"}",)
               ]
           ),
           backgroundColor: Colors.white,
