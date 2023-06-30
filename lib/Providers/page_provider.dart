@@ -29,4 +29,9 @@ class PageProvider with ChangeNotifier{
     _page = newPage;
     notifyListeners();
   }
+
+  void move(int index,Widget page){
+    changeIndex(index);
+    changePage(page);
+  }
 }

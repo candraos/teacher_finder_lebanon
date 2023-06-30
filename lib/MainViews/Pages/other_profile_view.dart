@@ -10,19 +10,27 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/change_topics_view.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/edit_profile_view.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/EditProfile/reviews_view.dart';
+import 'package:teacher_finder_lebanon/MainViews/Pages/home_view.dart';
+import 'package:teacher_finder_lebanon/Models/Notification.dart';
 import 'package:teacher_finder_lebanon/Registration/login_view.dart';
+import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/feedback_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/topic_vm.dart';
 import 'package:teacher_finder_lebanon/Widgets/review_widget.dart';
 import 'package:teacher_finder_lebanon/Models/User.dart' as usermodel;
+import '../../Models/Connection.dart';
 import '../../Models/Student.dart';
 import '../../Models/Teacher.dart';
+import '../../Providers/login_provider.dart';
+import '../../Providers/page_provider.dart';
 import '../../Widgets/rating_bar_widget.dart';
 
 class OtherProfile extends StatefulWidget {
-  const OtherProfile({Key? key,required this.user}) : super(key: key);
+  const OtherProfile({Key? key,required this.user, required this.showConnectBtn, required this.notificationId}) : super(key: key);
 
   final usermodel.User user;
+  final bool showConnectBtn;
+  final int? notificationId;
 
   @override
   _OtherProfileState createState() => _OtherProfileState();
@@ -101,16 +109,100 @@ class _OtherProfileState extends State<OtherProfile> {
 
                       SizedBox(height: 20,),
 
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: 10),
-                        child: ElevatedButton(
-                            onPressed: (){
-                            },
-                            child: Text("Connect")
+                      Visibility(
+                        visible: widget.showConnectBtn,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(
+                              onPressed: () async{
+                                late Connection connection;
+                                ConnectionViewModel _connectionViewModel = ConnectionViewModel();
+                                usermodel.User user = context.read<LoginProvider>().user;
+                                if(user is Student){
+                                  connection = Connection.Send(user.id, widget.user.id);
+                                }else{
+                                  connection = Connection.Send(widget.user.id, user.id);
+                                }
+                                bool success = await _connectionViewModel.send(connection,context);
+                                if(success){
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection sent to ${widget.user.firstName} ${widget.user.lastName}")));
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection could not be sent")));
+                                }
+                              },
+                              child: Text("Connect")
+                          ),
                         ),
                       ),
 
+                      Visibility(
+                        visible: !widget.showConnectBtn,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 10,),
+                              Expanded(
 
+                                child: ElevatedButton(
+                                    onPressed: ()async{
+                                      bool success = await ConnectionViewModel().Accept(widget.notificationId!);
+                                      if(success){
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.user.firstName} ${widget.user.lastName} is now your"
+                                            "${widget.user is Student ? "Student"  : "Teacher"}"),action: SnackBarAction(
+                                          label: "Dismiss",
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                          },
+                                        ),));
+                                        context.read<PageProvider>().move(0, Home());
+                                        Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
+                                      }else{
+                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Occurred, please try again later"),action: SnackBarAction(
+                                          label: "Dismiss",
+                                          onPressed: () {
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                          },
+                                        ),));
+
+                                      }
+                                    },
+                                    child: Text("Accept")),
+                              ),
+                              SizedBox(width: 10,),
+                              Expanded(
+
+                                child: ElevatedButton(
+
+                                  onPressed: () async{
+                                    bool success = await ConnectionViewModel().Reject(widget.notificationId!);
+                                    if(success){
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection Rejected"),action: SnackBarAction(
+                                        label: "Dismiss",
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        },
+                                      ),));
+                                      context.read<PageProvider>().move(0, Home());
+                                      Navigator.popUntil(context, (Route<dynamic> predicate) => predicate.isFirst);
+                                    }else{
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Occurred, please try again later"),action: SnackBarAction(
+                                        label: "Dismiss",
+                                        onPressed: () {
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        },
+                                      ),));
+
+                                    }
+                                  },
+                                  child: Text("Reject"),
+                                  style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).errorColor),),
+                              ),
+                              SizedBox(width: 10,),
+                            ],
+                          ),
+                        ),
+                      ),
 
                       SizedBox(height: 40,),
 

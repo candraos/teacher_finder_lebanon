@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import 'package:image_picker_widget/image_picker_widget.dart';
+import 'package:teacher_finder_lebanon/MainViews/Pages/other_profile_view.dart';
 import 'package:teacher_finder_lebanon/MainViews/Pages/search_view.dart';
 import 'package:teacher_finder_lebanon/Models/Connection.dart';
 import 'package:teacher_finder_lebanon/Providers/login_provider.dart';
@@ -39,59 +40,65 @@ class _SearchListState extends State<SearchList> {
             });
 
           });
-          return Card(
-            elevation: 5,
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  if(context.watch<SearchViewModel>().images.isNotEmpty)
-                  ImagePickerWidget(
+          return GestureDetector(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OtherProfile(user: widget.users[i],showConnectBtn: true, notificationId: null,)));
+            },
+            child: Card(
+              
+              elevation: 5,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    if(context.watch<SearchViewModel>().images.isNotEmpty)
+                    ImagePickerWidget(
+                      diameter: 70,
+
+                      initialImage:context.watch<SearchViewModel>().images[i] == null? Image(image: Svg("assets/profile-logo.svg"),).image : Image.memory(context.watch<SearchViewModel>().images[i]).image,
+                      shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
+                      isEditable: false,
+
+                    )
+                    else
+                    ImagePickerWidget(
                     diameter: 70,
 
-                    initialImage:context.watch<SearchViewModel>().images[i] == null? Image(image: Svg("assets/profile-logo.svg"),).image : Image.memory(context.watch<SearchViewModel>().images[i]).image,
+                    initialImage:Image(image: Svg("assets/profile-logo.svg"),).image,
                     shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
                     isEditable: false,
 
-                  )
-                  else
-                  ImagePickerWidget(
-                  diameter: 70,
-
-                  initialImage:Image(image: Svg("assets/profile-logo.svg"),).image,
-                  shape: ImagePickerWidgetShape.circle, // ImagePickerWidgetShape.square
-                  isEditable: false,
-
-                  ),
-                  Text("${widget.users[i].firstName} ${widget.users[i].lastName}",style: TextStyle(fontSize: 20),),
-                  // for(int index = 0;index < topics.length; index++)
-                  Text(userTopics,textAlign: TextAlign.center,style: TextStyle(fontSize: 16),),
-                  if(widget.users[i] is Teacher) Text("${widget.users[i].price} ${widget.users[i].currency}/session",style: TextStyle(fontSize: 16,color: Colors.black.withOpacity(0.5)),),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            minimumSize: Size.fromHeight(30)
-                        ),
-                        onPressed: () async{
-                          late Connection connection;
-                          User user = context.read<LoginProvider>().user;
-                          if(user is Student){
-                            connection = Connection.Send(user.id, widget.users[i].id);
-                          }else{
-                            connection = Connection.Send(widget.users[i].id, user.id);
-                          }
-                          bool success = await _connectionViewModel.send(connection,context);
-                          if(success){
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection sent to ${widget.users[i].firstName} ${widget.users[i].lastName}")));
-                          }else{
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection could not be sent")));
-                          }
-                        },
-                        child: Text("connect")
                     ),
-                  )
-                ],
+                    Text("${widget.users[i].firstName} ${widget.users[i].lastName}",style: TextStyle(fontSize: 20),),
+                    // for(int index = 0;index < topics.length; index++)
+                    Text(userTopics,textAlign: TextAlign.center,style: TextStyle(fontSize: 16),),
+                    if(widget.users[i] is Teacher) Text("${widget.users[i].price} ${widget.users[i].currency}/session",style: TextStyle(fontSize: 16,color: Colors.black.withOpacity(0.5)),),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              minimumSize: Size.fromHeight(30)
+                          ),
+                          onPressed: () async{
+                            late Connection connection;
+                            User user = context.read<LoginProvider>().user;
+                            if(user is Student){
+                              connection = Connection.Send(user.id, widget.users[i].id);
+                            }else{
+                              connection = Connection.Send(widget.users[i].id, user.id);
+                            }
+                            bool success = await _connectionViewModel.send(connection,context);
+                            if(success){
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection sent to ${widget.users[i].firstName} ${widget.users[i].lastName}")));
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection could not be sent")));
+                            }
+                          },
+                          child: Text("connect")
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
