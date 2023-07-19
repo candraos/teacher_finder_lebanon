@@ -13,6 +13,7 @@ import 'package:teacher_finder_lebanon/MainViews/navigation_view.dart';
 import 'package:teacher_finder_lebanon/Providers/page_provider.dart';
 import 'package:teacher_finder_lebanon/Providers/session_provider.dart';
 import 'package:teacher_finder_lebanon/Registration/login_view.dart';
+import 'package:teacher_finder_lebanon/ViewModels/connection_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/feedback_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/notification_view_model.dart';
 import 'package:teacher_finder_lebanon/ViewModels/search_vm.dart';
@@ -63,6 +64,7 @@ await _initialise();
       MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => ListFeedbackViewModel()),
+          ChangeNotifierProvider(create: (_) => ConnectionViewModel()),
           ChangeNotifierProvider(create: (_) => MessageService()),
           ChangeNotifierProvider(create: (_) => StudentTeacherViewModel()),
           ChangeNotifierProvider(create: (_) => ListNotificationsViewModel()),

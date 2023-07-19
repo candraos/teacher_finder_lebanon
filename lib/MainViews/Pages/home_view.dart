@@ -44,7 +44,6 @@ setState(() {
   @override
   Widget build(BuildContext context) {
     var user = Supabase.instance.client.auth.currentUser?.userMetadata;
-    print(user);
     return DefaultTabController(
       length: 2,
       child: Scaffold(

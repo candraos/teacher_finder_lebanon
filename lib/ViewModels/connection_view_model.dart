@@ -62,6 +62,7 @@ class ConnectionViewModel with ChangeNotifier{
 
       return context.read<ListNotificationsViewModel>().newNotifications;
     }catch(e){
+      print(e);
       return 0;
     }
   }

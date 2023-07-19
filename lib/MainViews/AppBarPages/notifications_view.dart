@@ -41,28 +41,26 @@ class _NotificationsState extends State<Notifications> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      body: Consumer<ListNotificationsViewModel>(
+      body: ListView.separated(
+        shrinkWrap: true,
 
-        builder: (_,vm,__) => ListView.separated(
-          shrinkWrap: true,
-
-            itemBuilder: (_, index){
-            NotificationModel.Notification notification = vm.notifications[index].notification;
-              if(notification.type == NotificationModel.Type.Connection){
-                return GestureDetector(
-                  onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => OtherProfile(user: notification.user,showConnectBtn: false,notificationId: notification.id!,)));
-                  },
-                    child: RequestWidget(notification: notification,notifyParent: refresh,));
-              }
-              return ListTile(
-                title: Text("Notification number $index",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
-                subtitle: Text("this is the description of the notification notification notification notification",style: TextStyle(fontSize: 20),),
-              );
-            },
-            separatorBuilder: (_, index) => Divider(thickness: 2,),
-            itemCount: context.watch<ListNotificationsViewModel>().notifications.length),
-      )
+          itemBuilder: (_, index){
+          var vm = context.watch<ListNotificationsViewModel>();
+          NotificationModel.Notification notification = vm.notifications[index].notification;
+            if(notification.type == NotificationModel.Type.Connection){
+              return GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => OtherProfile(user: notification.user,showConnectBtn: false,notificationId: notification.id!,)));
+                },
+                  child: RequestWidget(notification: notification,notifyParent: refresh,));
+            }
+            return ListTile(
+              title: Text("Notification number $index",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+              subtitle: Text("this is the description of the notification notification notification notification",style: TextStyle(fontSize: 20),),
+            );
+          },
+          separatorBuilder: (_, index) => Divider(thickness: 2,),
+          itemCount: context.watch<ListNotificationsViewModel>().notifications.length)
     );
   }
 }
