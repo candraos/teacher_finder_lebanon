@@ -24,6 +24,7 @@ TextEditingController _searchController = TextEditingController();
      await _listTopicsViewModel.fetchTopics();
      topics = context.read<ListTopicsViewModel>().topics;
      topics.forEach((topic) { topicsCheckBox[topic.topic!.name!] = false; });
+     await context.read<SearchViewModel>().getRecommended(context);
     setState(() {
     });
 
