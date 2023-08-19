@@ -80,9 +80,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
           IconButton(
               onPressed: () => context.read<PageProvider>().changePage(Notifications()),
               icon: Badge(
-                  showBadge: context.watch<ListNotificationsViewModel>().newNotifications != 0,
-                  position: BadgePosition.topEnd(top: 0, end: 7),
-                  badgeContent:Text("${context.watch<ListNotificationsViewModel>().newNotifications}",style: TextStyle(color: Colors.white),),
+                  showBadge: newNotifications != 0,
+                  badgeStyle: BadgeStyle(
+                  ),
+                  position: BadgePosition.topEnd(top: -10, end: 0),
+                  badgeContent:Padding(
+                    padding: const EdgeInsets.only(bottom: 2),
+                    child: Text("${newNotifications}",style: TextStyle(color: Colors.white),),
+                  ),
                   child: Icon(widget.notificationIcon,))
           ),
 

@@ -60,7 +60,7 @@ class ConnectionViewModel with ChangeNotifier{
         await _getUser(connection, user);
       }));
 
-      return context.read<ListNotificationsViewModel>().newNotifications;
+      return myConnections.length;
     }catch(e){
       print(e);
       return 0;
