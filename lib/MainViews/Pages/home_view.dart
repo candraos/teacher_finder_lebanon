@@ -52,8 +52,8 @@ setState(() {
           title: TabBar(
             labelColor: Theme.of(context).primaryColor,
               tabs: [
-                Tab(text: "Current ${user!["role"] == "Student" ? "Teachers" : "Students"}",),
-                Tab(text: "Previous ${user["role"] == "Student" ? "Teachers" : "Students"}",)
+                Tab(text: "Current ${user?["role"] == "Student" ? "Teachers" : "Students"}",),
+                Tab(text: "Previous ${user?["role"] == "Student" ? "Teachers" : "Students"}",)
               ]
           ),
           backgroundColor: Colors.white,

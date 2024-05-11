@@ -95,6 +95,7 @@ class _ChangePasswordState extends State<ChangePassword> {
                      Navigator.of(context).popUntil((route) => route.isFirst);
                    }catch(e){
                      toggleVisibility();
+                     print(e);
                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error occured, please try again later")));
 
                    }

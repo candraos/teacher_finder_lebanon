@@ -71,7 +71,7 @@ class SearchViewModel with ChangeNotifier{
       });
     });
 
-    recommendedUsers = await _supabase.from(table).select().in_("customid", ids);
+    recommendedUsers = await _supabase.from(table).select().in_("customid", ids).limit(5);
     loggedin is Student?
         users = (recommendedUsers as List<dynamic>).map((userJson) => Teacher.fromJson(userJson)).toList()
             :  users = (recommendedUsers as List<dynamic>).map((userJson) => Student.fromJson(userJson)).toList();

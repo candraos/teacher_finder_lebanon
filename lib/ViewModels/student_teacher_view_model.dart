@@ -11,12 +11,17 @@ class StudentTeacherViewModel with ChangeNotifier{
 
 
   Stream getCurrent(BuildContext context) {
-    var user = Supabase.instance.client.auth.currentUser!;
+    var user = context.read<LoginProvider>().user;
     String column = user is Student ? "studentID" : "teacherID";
     String table = user is Student ? "Teacher" : "Student";
+    var temp = _supabase.from("StudentTeacher")
+        .select("*,$table!inner(*)").match({
+      column : user?.id,
+      "isActive" : true,
+    });
     Stream stream = _supabase.from("StudentTeacher")
         .select("*,$table!inner(*)").match({
-      column : user.id,
+      column : user?.id,
       "isActive" : true,
     }).asStream();
 
@@ -24,12 +29,12 @@ class StudentTeacherViewModel with ChangeNotifier{
   }
 
   Stream getPrevious(BuildContext context){
-    var user = Supabase.instance.client.auth.currentUser!;
+    var user = context.read<LoginProvider>().user;
     String column = user is Student ? "studentID" : "teacherID";
     String table = user is Student ? "Teacher" : "Student";
     Stream stream = _supabase.from("StudentTeacher")
         .select("*,$table!inner(*)").match({
-      column : user.id,
+      column : user?.id,
       "isActive" : false,
       "isAccepted" : true,
     }).asStream();
